@@ -1,3 +1,4 @@
+import os
 RED     = "\033[1;31m"  
 BLUE    = "\033[1;34m"
 CYAN    = "\033[1;36m"
@@ -17,6 +18,7 @@ tabuleiro ={'7': ' ' , '8': ' ' , '9': ' ',
             '1': ' ' , '2': ' ' , '3': ' '}
 
 def mostra_velha():
+    os.system('cls')
     print("┌───┬───┬───┐")
     print(f"│ {printJogada('1')} │ {printJogada('2')} │ {printJogada('3')} │")
     print("├───┼───┼───┤")
@@ -44,6 +46,7 @@ def verificarLugar(x):
 
 def realizarJogada(jogador, x):
     while True:
+        mostra_velha()
         lugar = input(f"{jogador} em qual posição deseja jogar? ")
         if lugar not in ['1','2','3','4','5','6','7','8','9']:
             print("\nLugar inválido!")
@@ -54,40 +57,51 @@ def realizarJogada(jogador, x):
             continue
 
         tabuleiro[lugar] = x
-        return
+        return verificarVitoria()
 
 
 def verificarVitoria():
-     # verticais
-      if tabuleiro['7'] == tabuleiro['4'] == tabuleiro['1'] != ' ':
-          return f"Vitória do jogador {tabuleiro['7']}", True
-      elif tabuleiro['8'] == tabuleiro['5'] == tabuleiro['2'] != ' ':
-          return f"Vitória do jogador {tabuleiro['8']}", True
-      elif tabuleiro['9'] == tabuleiro['6'] == tabuleiro['3'] != ' ':
-          return f"Vitória do jogador {tabuleiro['9']}", True
+    global status
+    # verticais
+    if tabuleiro['7'] == tabuleiro['4'] == tabuleiro['1'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['7']}"
+        return True
+    elif tabuleiro['8'] == tabuleiro['5'] == tabuleiro['2'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['8']}"
+        return True
+    elif tabuleiro['9'] == tabuleiro['6'] == tabuleiro['3'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['9']}"
+        return True
 
-      # horizontais
-      elif tabuleiro['7'] == tabuleiro['8'] == tabuleiro['9'] != ' ':
-          return f"Vitória do jogador {tabuleiro['7']}", True
-      elif tabuleiro['4'] == tabuleiro['5'] == tabuleiro['6'] != ' ':
-          return f"Vitória do jogador {tabuleiro['8']}", True
-      elif tabuleiro['1'] == tabuleiro['2'] == tabuleiro['3'] != ' ':
-          return f"Vitória do jogador {tabuleiro['1']}", True
+    # horizontais
+    elif tabuleiro['7'] == tabuleiro['8'] == tabuleiro['9'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['7']}"
+        return True
+    elif tabuleiro['4'] == tabuleiro['5'] == tabuleiro['6'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['8']}"
+        return True
+    elif tabuleiro['1'] == tabuleiro['2'] == tabuleiro['3'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['1']}"
+        return True
 
-      #diagonais
-      elif tabuleiro['7'] == tabuleiro['5'] == tabuleiro['3'] != ' ':
-          return f"Vitória do jogador {tabuleiro['7']}", True
-      elif tabuleiro['1'] == tabuleiro['5'] == tabuleiro['9'] != ' ':
-          return f"Vitória do jogador {tabuleiro['1']}", True
+    #diagonais
+    elif tabuleiro['7'] == tabuleiro['5'] == tabuleiro['3'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['7']}"
+        return True
+    elif tabuleiro['1'] == tabuleiro['5'] == tabuleiro['9'] != ' ':
+        status = f"Vitória do jogador {tabuleiro['1']}"
+        return True
 
-      else:
-          return [tabuleiro.values()].count(' '), False
+    else:
+        return False
       
 
 jogador_x = ""
 jogador_o = ""
+status = ""
 
 def definirNome():
+    os.system('cls')
     global jogador_x, jogador_o
     jogador_x = input("Digite o nome do jogador X: ")
     jogador_o = input("Digite o nome do jogador O: ")
@@ -95,19 +109,11 @@ def definirNome():
 
 def jogar():
     definirNome()
-    x = False
-    while not x:
-        mostra_velha()
-        realizarJogada(jogador_x, 'X')
-        jogador, x = verificarVitoria()
-        if x:
-            break
-        mostra_velha()
-        realizarJogada(jogador_o, 'O')
-        jogador, x = verificarVitoria()
-        if x:
-            break
-    print(jogador)
-    
+    while True:
+        if (realizarJogada(jogador_x, 'X')): break
+        if (realizarJogada(jogador_o, 'O')): break
+    os.system('cls')
+    mostra_velha()
+    print(status) 
 
 jogar()
